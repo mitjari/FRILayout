@@ -36,6 +36,8 @@ public class UiManager : MonoBehaviour {
 		textSvet= this.transform.Find("TextSvet").gameObject.GetComponent<Text> ();
 		textRibaraca= this.transform.Find("TextRibaraca").gameObject.GetComponent<Text> ();
 		textZirafa= this.transform.Find("TextZirafa").gameObject.GetComponent<Text> ();
+
+		InfoImg.enabled = false;
 	}
 	
 	// Update is called once per frame

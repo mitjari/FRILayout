@@ -17,7 +17,6 @@ public class trigerActionZirafa : MonoBehaviour {
 	}
 
 	void OnTriggerEnter (Collider other){
-		Debug.Log ("enter");
 		UiManager uiManger = uiCanvas.GetComponent<UiManager>();
 		uiManger.showInfo ("ZIRAFA");
 	}
