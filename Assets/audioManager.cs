@@ -49,13 +49,16 @@ public class audioManager : MonoBehaviour {
 			//Obdelaj vprasanja
 			//Ugasni vse zvoke razen ambientne glasbe ki jo samo stisaj
 			int stVprasanja= 0;
-			if( Input.GetKey("1")) stVprasanja= 3;
+			if( Input.GetKeyDown("0")) stVprasanja= -1;
+			if( Input.GetKeyDown("1")) stVprasanja= 3;
+			if( Input.GetKeyDown("3")) stVprasanja= 5;
+			if( Input.GetKeyDown("7")) stVprasanja= 9;
 
-			if( stVprasanja > 0 ){
+			if( stVprasanja  != 0 ){
 				foreach( AudioSource zvok in audio ) {
 					if( zvok.isPlaying ) zvok.Stop();
 				}
-				audio[stVprasanja].Play();
+				if( stVprasanja > 0 ) audio[stVprasanja].Play();
 			}
 
 		} else {
