@@ -16,6 +16,8 @@ public class audioManager : MonoBehaviour {
 	private bool interju;
 	private bool vprasanjaPrikaz;
 
+	bool delayActive= false;
+
 	// Use this for initialization
 	void Start () {
 		audio= this.gameObject.GetComponents<AudioSource>();
@@ -26,7 +28,7 @@ public class audioManager : MonoBehaviour {
 		hint.enabled = false;
 		interju = false;
 
-		 vprasanjaPrikaz= false;
+		vprasanjaPrikaz= false;
 	}
 	
 	// Update is called once per frame
@@ -40,11 +42,20 @@ public class audioManager : MonoBehaviour {
 				//Prikazi seznam vprasanj in odmakni hint
 				hint.enabled= false;
 				vprasanja.SetActive(true);
+
+				//Resetiraj barvo vprasanj
+				if( !delayActive){
+					Text[] vprasanjaTxt= vprasanja.transform.GetComponentsInChildren<Text>();
+					foreach( Text vprasanjeTxt in vprasanjaTxt){
+						vprasanjeTxt.color= new Color(0, 0, 0);
+					}
+				}
 			}else{
 				//skrij seznam vprasanj in prikazi hint
 				hint.enabled= true;
 				vprasanja.SetActive(false);
 			}
+
 
 			//Obdelaj vprasanja
 			//Ugasni vse zvoke razen ambientne glasbe ki jo samo stisaj
@@ -54,11 +65,21 @@ public class audioManager : MonoBehaviour {
 			if( Input.GetKeyDown("3")) stVprasanja= 5;
 			if( Input.GetKeyDown("7")) stVprasanja= 9;
 
-			if( stVprasanja  != 0 ){
+			if( stVprasanja  != 0 && !delayActive){
 				foreach( AudioSource zvok in audio ) {
 					if( zvok.isPlaying ) zvok.Stop();
 				}
-				if( stVprasanja > 0 ) audio[stVprasanja].Play();
+
+				if( stVprasanja > 0 ){
+					if(vprasanjaPrikaz){
+						string imeVprasanja= "Vprasanje " + (stVprasanja - 2);
+						Text vprasanje= GameObject.Find(imeVprasanja).gameObject.GetComponent<Text>();
+						vprasanje.color= new Color(200, 0, 0);
+					}
+					//Z zamikom predvajaj vprasanje
+					delayActive= true;
+					StartCoroutine(playAudio(0.5f, stVprasanja));
+				}
 			}
 
 		} else {
@@ -73,5 +94,12 @@ public class audioManager : MonoBehaviour {
 				hint.enabled= false;
 			}
 		}
+	}
+
+	IEnumerator playAudio(float delayTime, int stVprasanja)	{
+		yield return new WaitForSeconds(delayTime);
+		audio[stVprasanja].Play();
+		vprasanjaPrikaz = false;
+		delayActive = false;
 	}
 }
